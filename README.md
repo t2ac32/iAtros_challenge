@@ -23,11 +23,11 @@ Theres a notebook (iatros_challenge.ipynb) contains the step by step implementat
 ### Install PIP Requirements
 1. `pip install -r requirements.txt` 
 
-## How to
+## How to Run the prediction App
 
 From terminal:
 
-**Example: Arterial Pressure Prediction for a subject on database**
+### Example: Arterial Pressure Prediction for a subject on database
    
 - Args:
     - observ: Code for observation defaul to 85354-9 LOINC code  
