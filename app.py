@@ -205,13 +205,16 @@ def setup_model(model_name: str):
     learn = tabular_learner(dls,path=models_path, metrics=accuracy,callbacks=callbacks)
     return learn
 
-def predict(data: pd.DataFrame):
+def predict(data: pd.DataFrame, model_path: Path):
+
     try: 
     data = data.drop(columns=['Units','Patient_Ref'])
     except:
         print('Column not in dataframe')
         print('Available columns: ', iatros_df.columns)
     
+    #Load pre existing model 
+    path = load_learner(model_path/'hypertension_model.pth', cpu=False)
 
 @click.command()
 @click.option('--dia', default=120, help='Diastolic pressure value in mmHg.')
@@ -221,7 +224,9 @@ def predict_vals(dia, sys):
 
 @click.command()
 @click.option('--observ', default=85354-9, help='Observation code defaul to blood pressure')
-@click.option('--suject', help='request link to query bundle.')
+@click.option('--subject', help='request link to query bundle.')
+@click.option('--model', default= Path(models/'hypertension_model.pth'),
+                         help='Path to model including model filename, e.j models/mymodel.pth')
 def predict_bundle(subject):
     """Receives a query for pressure values and predict on each entry"""
     #Reuse SMART server instance
