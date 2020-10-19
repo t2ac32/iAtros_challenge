@@ -7,7 +7,7 @@ The solution contains two parts.
 2. A cli tool that queries for a patient and predicts it mesurments returning an alert summary.
 
 ## Prototyping
-Theres a notebook (iatros_challenge.ipynb) contains the step by step implementation of the solution incluiding:
+The notebook **(iatros_challenge.ipynb)** contains the step by step implementation of the solution incluiding:
 1. Implementation of requests between HAPI-fhir server and app
 2. Pagination handeling
 3. Filling the Dataframe
