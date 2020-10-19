@@ -18,6 +18,7 @@ Theres a notebook (iatros_challenge.ipynb) contains the step by step implementat
   - Model setup
   - Model definition
 7. Running the model
+8. Prediction test on a row of dataframe
 
 ## Installation
 
