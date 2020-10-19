@@ -1,6 +1,10 @@
 # Hypertension Alert System
 
-The repositoru contains the solution for the iAtros AI & Backend Engineer challenge.
+The repository contains the solution for the iAtros AI & Backend Engineer challenge.
+
+The solution contains two parts.
+1. First a prototyping notebook for function testing and explaining reasoning process.
+2. A cli tool that queries for a patient and predicts it mesurments returning an alert summary.
 
 ## Prototyping
 Theres a notebook (iatros_challenge.ipynb) contains the step by step implementation of the solution incluiding:
