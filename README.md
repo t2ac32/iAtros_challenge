@@ -1,6 +1,23 @@
 # Hypertension Alert System
 
+The repositoru contains the solution for the iAtros AI & Backend Engineer challenge.
+
+## Prototyping
+Theres a notebook (iatros_challenge.ipynb) contains the step by step implementation of the solution incluiding:
+1. Implementation of requests between HAPI-fhir server and app
+2. 
+
 ## Installation
+
+### Install Conda environment
+1. `conda env create -f environment.yml`
+2. Activate the environment:
+  `conda activate env`
+3. Verify the environment was installed correctly:
+  `conda env list`
+
+### Install PIP Requirements
+1. `pip install -r requirements.txt` 
 
 ## How to
 

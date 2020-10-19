@@ -219,7 +219,7 @@ def predict(data: pd.DataFrame, model_path:Path):
     learn = load_learner(model_path, cpu=True)
 
     #Iterate subject Dataframe 
-    headers = ['Diastolic', 'Systolic', 'Alert Status']
+    headers = ['Norm-Diastolic', 'Norm-Systolic', 'Alert Status']
     table = []
     for index, row in data.iterrows():
         row, clas, probs = learn.predict(row)
