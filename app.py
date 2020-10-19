@@ -35,7 +35,7 @@ settings = {
 }
 SMART = client.FHIRClient(settings=settings) 
 
-def search_observation(obs_code: str, server) -> pd.DataFrame:
+def search_observation(obs_code: str, server, subject= None ) -> pd.DataFrame:
     """ 
         Recibes a code conforming to SNOMED-CT 
         e.j. http://bioportal.bioontology.org/ontologies/SNOMEDCT/?p=classes&conceptid=http%3A%2F%2Fpurl.bioontology.org%2Fontology%2FSNOMEDCT%2F38341003&jump_to_nav=true
@@ -43,15 +43,18 @@ def search_observation(obs_code: str, server) -> pd.DataFrame:
         Args:
             obs_code [str] -- SNOMED-CT or LOINC conforming code
             server   [   ] -- instance of fhirclient server
+            subject  [   ] -- id of subject in fhir database
         
         Returns:
             iatros_df [pandas.DataFrame]
     """
     # Create search query
-    fs = o.Observation.where(struct = {'status':'final',
-                                    'code':{'$and': [obs_code]}
-                                        }
-                            )
+    payload = {'status' : 'final',
+                'code': {'$and': [obs_code]},    
+            }
+    if subject is not None:
+        payload['subject'] = subject
+    fs = o.Observation.where(struct = payload)
     # Perfom query to receive a Bundle resourceType since it contains pagination link.
     bundle = fs.perform(server)
     #print(json.dumps(bundle.as_json(), indent=2))
@@ -205,41 +208,55 @@ def setup_model(model_name: str):
     learn = tabular_learner(dls,path=models_path, metrics=accuracy,callbacks=callbacks)
     return learn
 
-def predict(data: pd.DataFrame, model_path: Path):
-
+def predict(data: pd.DataFrame, model_path:Path):
     try: 
-    data = data.drop(columns=['Units','Patient_Ref'])
+        data = data.drop(columns=['Units','Patient_Ref'])
     except:
         print('Column not in dataframe')
-        print('Available columns: ', iatros_df.columns)
+        print('Available columns: ', data.columns)
     
     #Load pre existing model 
-    path = load_learner(model_path/'hypertension_model.pth', cpu=False)
+    learn = load_learner(model_path, cpu=True)
 
+    #Iterate subject Dataframe 
+    headers = ['Diastolic', 'Systolic', 'Alert Status']
+    table = []
+    for index, row in data.iterrows():
+        row, clas, probs = learn.predict(row)
+        alert = "Hypertension Alert" if clas == 1 else 'Normal vitals'
+        dia = row['Dia']
+        sys = row['Sys']
+
+        tab_row = [dia, sys, alert]
+        table.append(tab_row)
+    print(tabulate(table, headers=headers, tablefmt="fancy_grid"))
+
+'''
 @click.command()
 @click.option('--dia', default=120, help='Diastolic pressure value in mmHg.')
 @click.option('--sys', default=80, help='Sistolic pressure value in mmHg.')
 def predict_vals(dia, sys):
+'''
 
 
 @click.command()
-@click.option('--observ', default=85354-9, help='Observation code defaul to blood pressure')
+@click.option('--observ', default='85354-9', help='Observation code string defaul to blood pressure')
 @click.option('--subject', help='request link to query bundle.')
-@click.option('--model', default= Path(models/'hypertension_model.pth'),
+@click.option('--model', default= Path('models/hypertension_model.pth'),
                          help='Path to model including model filename, e.j models/mymodel.pth')
-def predict_bundle(subject):
+def predict_bundle(observ, subject, model):
     """Receives a query for pressure values and predict on each entry"""
     #Reuse SMART server instance
-    iatros_df = search_observation('85354-9',subject='1598464', SMART.server)
+    #ej. subject: 1598464
+    iatros_df = search_observation(observ, SMART.server, subject=subject)
     '''Remove nan values'''
     iatros_df = iatros_df.dropna()
     '''Reset index count and remove it'''
     iatros_df.reset_index(drop=True,inplace=True)
     
     #Predict
+    print('Running prediction on model: ', model)
+    predict(data=iatros_df, model_path= model)
 
-    model_path = Path(model/)
-    model = load_learner()
-
-if __name__ = 'main':
-    pressure_alert()
+if __name__ == '__main__':
+    predict_bundle()
