@@ -9,7 +9,15 @@ The solution contains two parts.
 ## Prototyping
 Theres a notebook (iatros_challenge.ipynb) contains the step by step implementation of the solution incluiding:
 1. Implementation of requests between HAPI-fhir server and app
-2. 
+2. Pagination handeling
+3. Filling the Dataframe
+4. Running the main query
+5. Preprocess and clead the Dataframe
+
+6. Binary classification
+  - Model setup
+  - Model definition
+7. Running the model
 
 ## Installation
 
