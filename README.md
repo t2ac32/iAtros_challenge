@@ -21,15 +21,18 @@ The notebook **(iatros_challenge.ipynb)** contains the step by step implementati
 8. Prediction test on a row of dataframe
 
 ## Installation
-
-### Install Conda environment
+### 1. Install Conda environment
 1. `conda env create -f environment.yml`
 2. Activate the environment:
-  `conda activate env`
+  `conda activate iatros`
 3. Verify the environment was installed correctly:
   `conda env list`
 
-### Install PIP Requirements
+### 2. Install fhir-client 
+In main working directory from terminal run 
+`pip install fhirclient --no-index --find-links client-py-4.0.0.zip  `
+
+### 3. Install PIP Requirements
 1. `pip install -r requirements.txt` 
 
 ## How to Run the prediction App
